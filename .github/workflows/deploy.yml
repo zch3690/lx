@@ -1,0 +1,25 @@
+name: Auto Deploy to Nginx Server
+
+on:
+  push:
+    branches: [ main ]  # 你的主分支名，截图里是main，直接用
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: Set up SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
+
+      - name: Connect to server and deploy
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+            cd /usr/share/nginx/html
+            git pull origin main
+            bash deploy_web.sh
+          EOF
