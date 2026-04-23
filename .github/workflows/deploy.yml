@@ -19,7 +19,7 @@ jobs:
       - name: Connect to server and deploy
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
-            cd /opt/web/web-static
+            cd /usr/share/nginx/html
             git pull origin main
             bash deploy_web.sh
           EOF
